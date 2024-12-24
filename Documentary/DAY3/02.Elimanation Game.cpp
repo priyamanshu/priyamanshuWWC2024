@@ -1,29 +1,42 @@
 #include <iostream>
+#include <vector>
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(nullptr) {}
-};
+using namespace std;
 
-ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-    ListNode* dummy = new ListNode(0);
-    ListNode* current = dummy;
-    int carry = 0;
-
-    while (l1 != nullptr || l2 != nullptr || carry) {
-        int sum = carry;
-        if (l1 != nullptr) {
-            sum += l1->val;
-            l1 = l1->next;
-        }
-        if (l2 != nullptr) {
-            sum += l2->val;
-            l2 = l2->next;
-        }
-        carry = sum / 10;
-        current->next = new ListNode(sum % 10);
-        current = current->next;
+int lastRemaining(int n) {
+    vector<int> arr(n);
+    for (int i = 0; i < n; ++i) {
+        arr[i] = i + 1; // Fill the array with numbers from 1 to n
     }
-    return dummy->next;
+
+    bool leftToRight = true; // Start with left to right
+    while (arr.size() > 1) {
+        vector<int> newArr;
+        if (leftToRight) {
+            // Remove the first number and every other number from left to right
+            for (int i = 1; i < arr.size(); i += 2) {
+                newArr.push_back(arr[i]);
+            }
+        } else {
+            // Remove the rightmost number and every other number from right to left
+            for (int i = arr.size() - 2; i >= 0; i -= 2) {
+                newArr.push_back(arr[i]);
+            }
+        }
+        arr = newArr; // Update arr to the new array
+        leftToRight = !leftToRight; // Alternate direction
+    }
+
+    return arr[0]; // The last remaining number
+}
+
+int main() {
+    int n;
+    cout << "Enter the value of n: ";
+    cin >> n;
+
+    int result = lastRemaining(n);
+    cout << "The last remaining number is: " << result << endl;
+
+    return 0;
 }
